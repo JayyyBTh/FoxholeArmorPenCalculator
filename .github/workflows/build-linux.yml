@@ -11,27 +11,31 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install deps
-        run: |
-          sudo apt update
-          sudo apt install -y build-essential pkg-config qt6-base-dev
-
-      - name: Build calc_cli (QtCore only)
+      # No Qt needed now
+      - name: Build calc_cli (pure STL)
         run: |
           g++ -std=c++17 -O2 \
             main_console.cpp calculator.cpp tanksnshells.cpp \
-            -o calc_cli $(pkg-config --cflags --libs Qt6Core)
+            -o calc_cli
           file calc_cli
           ls -l calc_cli
 
-      - name: Create/Update 'latest' Release and upload binary
+      # Upload as artifact (backup in Actions UI)
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: calc_cli-linux
+          path: calc_cli
+
+      # Create a new release every run and mark it latest
+      - name: Create Release and upload binary
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: Latest build
-          prerelease: false
-          draft: false
+          tag_name: build-${{ github.run_number }}
+          name: "Build ${{ github.run_number }}"
           make_latest: true
+          draft: false
+          prerelease: false
           files: calc_cli
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
