@@ -26,7 +26,7 @@ weaps = read_names_from_csv("weapons.txt")
 
 # Fixed choices (like your QComboBoxes)
 armor_choices = [("0%", "0.0"), ("20%", "0.2"), ("40%", "0.4"),
-                 ("50%", "0.5"), ("75%", "0.75"), ("100%", "1.0")]
+                 ("50%", "0.5"), ("60%", "0.6"), ("75%", "0.75"), ("90%", "0.9"), ("100%", "1.0")]
 
 range_choices = [("5m (+25%)", "0.25"), ("10m (+20%)", "0.20"),
                  ("20m (+10%)", "0.10"), ("30m+ (0%)", "0.0")]
@@ -34,8 +34,8 @@ range_choices = [("5m (+25%)", "0.25"), ("10m (+20%)", "0.20"),
 angle_choices = [("75° (+40%)", "0.40"), ("45° (+30%)", "0.30"),
                  ("Front (0%)", "0.0")]
 
-velocity_choices = [("0.5x", "0.5"), ("1.0x", "1.0"),
-                    ("1.5x", "1.5"), ("2.0x", "2.0")]
+velocity_choices = [("-20%", "0.8"), ("0%", "1.0"),
+                    ("+10%x", "1.1"), ("+20%", "1.2"), ("+30%", "1.3"), ("+75%", "1.75")]
 
 # --- Discord bot setup ---
 intents = discord.Intents.default()
@@ -97,4 +97,5 @@ async def weapon_autocomplete(interaction: discord.Interaction, current: str):
     ][:25]
 
 bot.run(TOKEN)
+
 
