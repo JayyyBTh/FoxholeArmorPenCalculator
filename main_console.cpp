@@ -8,8 +8,6 @@
 #include "calculator.h"
 
 int main(int argc, char* argv[]) {
-    QCoreApplication app(argc, argv); // no GUI, but allows Qt containers
-
     if (argc != 7) {
         std::cerr << "Usage: " << argv[0]
                   << " <tankName> <weaponName> <armorFrac> <rangeBonus> <angleBonus> <velocity>\n";
@@ -61,4 +59,5 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 }
+
 
