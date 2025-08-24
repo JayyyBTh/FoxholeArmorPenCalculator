@@ -19,6 +19,10 @@ bool State::operator<(const State& o) const {
 }
 
 void killProbability(const Tank& t, const Weapon& s, const double& bonus, const double& initialArmorFrac, const double& velocityMod, std::ostream& out) {
+
+    out << "Calculating shots to kill full health and " << initialArmorFrac << "% armor " << t.name << " with " 
+        << velocityMod << " velocity modifier " << s.name << " angle and range bonuses sum up to " << bonus <<" percentile points" << std::endl;
+    
     using Dist = std::map<State, double>;
 
     //printDebugInputs(t,s,initialArmorFrac,bonus);
@@ -103,5 +107,6 @@ void printDebugInputs(const Tank& t, const Weapon& s, double armorFrac, double b
              << "| Bonus:" << bonus;
     std::cerr << "==============================";
 }
+
 
 
