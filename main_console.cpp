@@ -1,9 +1,8 @@
 #include <iostream>
 #include <sstream>
-#include <QCoreApplication>
-#include <QMap>
-#include <QString>
-#include <QVector>
+#include <string>
+#include <vector>
+#include <map>
 
 #include "tanksnshells.h"
 #include "calculator.h"
@@ -17,39 +16,37 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    QString tankName   = QString::fromUtf8(argv[1]).trimmed();
-    QString weaponName = QString::fromUtf8(argv[2]).trimmed();
-    bool ok = true;
+    std::string tankName   = argv[1];
+    std::string weaponName = argv[2];
 
-    double armorFrac  = QString::fromUtf8(argv[3]).toDouble(&ok); if (!ok) { std::cerr << "Invalid armorFrac\n"; return 1; }
-    double rangeBonus = QString::fromUtf8(argv[4]).toDouble(&ok); if (!ok) { std::cerr << "Invalid rangeBonus\n"; return 1; }
-    double angleBonus = QString::fromUtf8(argv[5]).toDouble(&ok); if (!ok) { std::cerr << "Invalid angleBonus\n"; return 1; }
-    double velocity   = QString::fromUtf8(argv[6]).toDouble(&ok); if (!ok) { std::cerr << "Invalid velocity\n"; return 1; }
+    try {
+        double armorFrac  = std::stod(argv[3]);
+        double rangeBonus = std::stod(argv[4]);
+        double angleBonus = std::stod(argv[5]);
+        double velocity   = std::stod(argv[6]);
+        double bonus = rangeBonus + angleBonus;
 
-    double bonus = rangeBonus + angleBonus;
+        // Load data files from the working directory
+        std::vector<Tank>   tanks   = loadTanks("tanks.txt");
+        std::vector<Weapon> weapons = loadWeapons("weapons.txt");
+        if (tanks.empty() || weapons.empty()) {
+            std::cerr << "Could not load tanks.txt or weapons.txt\n";
+            return 1;
+        }
 
-    // ⚠️ IMPORTANT: load from *real files*, not Qt resources
-    QVector<Tank> tanks   = loadTanks("tanks.txt");
-    QVector<Weapon> weapons = loadWeapons("weapons.txt");
-
-    if (tanks.isEmpty() || weapons.isEmpty()) {
-        std::cerr << "Could not load tanks.txt or weapons.txt\n";
-        return 1;
-    }
-
-    QMap<QString, Tank> tankMap;
-    QMap<QString, Weapon> weaponMap;
-    for (const Tank& t : tanks)   tankMap[t.name] = t;
-    for (const Weapon& w : weapons) weaponMap[w.name] = w;
-
-    if (!tankMap.contains(tankName)) {
-        std::cerr << "Tank not found: " << tankName.toStdString() << "\n";
-        return 1;
-    }
-    if (!weaponMap.contains(weaponName)) {
-        std::cerr << "Weapon not found: " << weaponName.toStdString() << "\n";
-        return 1;
-    }
+    std::map<std::string, Tank>   tankMap;
+        std::map<std::string, Weapon> weaponMap;
+        for (const auto& t : tanks)   tankMap[t.name] = t;
+        for (const auto& w : weapons) weaponMap[w.name] = w;
+        
+    if (!tankMap.count(tankName)) {
+            std::cerr << "Tank not found: " << tankName << "\n";
+            return 1;
+        }
+        if (!weaponMap.count(weaponName)) {
+            std::cerr << "Weapon not found: " << weaponName << "\n";
+            return 1;
+        }
 
     const Tank& t = tankMap[tankName];
     const Weapon& w = weaponMap[weaponName];
@@ -59,4 +56,9 @@ int main(int argc, char* argv[]) {
 
     std::cout << oss.str();
     return 0;
+    } catch (const std::exception& e) {
+        std::cerr << "Invalid numeric argument: " << e.what() << "\n";
+        return 1;
+    }
 }
+
