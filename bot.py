@@ -6,7 +6,7 @@ import subprocess
 import csv
 
 # ⚠️ Replace with your bot token
-TOKEN = os.environ.get("DISCORD_TOKEN")
+TOKEN = "YOUR_REAL_BOT_TOKEN"
 
 # Path to your console exe
 EXE = "./calc_cli"
@@ -97,3 +97,4 @@ async def weapon_autocomplete(interaction: discord.Interaction, current: str):
     ][:25]
 
 bot.run(TOKEN)
+
