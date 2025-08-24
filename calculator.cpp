@@ -2,7 +2,6 @@
 #include "calculator.h"
 #include <iomanip>
 #include <algorithm>
-#include <QDebug>
 
 double computePenChance(const Tank& t, const Weapon& s, double armorFrac, double bonus) {
 
@@ -90,18 +89,19 @@ void killProbability(const Tank& t, const Weapon& s, const double& bonus, const 
 }
 
 void printDebugInputs(const Tank& t, const Weapon& s, double armorFrac, double bonus) {
-    qDebug() << "=== KillProbability Inputs ===";
-    qDebug() << "Tank:" << t.name
+    std::cerr << "=== KillProbability Inputs ===";
+    std::cerr << "Tank:" << t.name
              << "| Health:" << t.baseHealth
              << "| Armor:" << t.baseArmor
              << "| BasePenChance:" << t.basePenChance
              << "| PreBonusCap:" << t.preBonusCap;
-    qDebug() << "Weapon:" << s.name
+    std::cerr << "Weapon:" << s.name
              << "| DamageHealth:" << s.damageHealth
              << "| DamageArmor:" << s.damageArmor
              << "| PenMod:" << s.penMod;
-    qDebug() << "Initial ArmorFrac:" << armorFrac
+    std::cerr << "Initial ArmorFrac:" << armorFrac
              << "| Bonus:" << bonus;
-    qDebug() << "==============================";
+    std::cerr << "==============================";
 }
+
 
