@@ -1,0 +1,47 @@
+#SHT
+SHT_Ares,9250,15650,0.25,0.50
+SHT_Warden,12000,17650,0.22,0.50
+
+#BT
+BT_Collie,6250,15650,0.25,0.50
+BTD_Hasta,6250,15650,0.20,0.50
+BT_Warden,5100,15650,0.25,0.50
+BT_Warden_Juggernaut,5100,16250,0.23,0.50
+
+#SPG
+SPG_Collie,12000,0.25,0.50
+SPG_Warden,4800,12000,0.25,0.50
+
+#Heavy Tanks Collie
+Bardiche_Quadiche,4000,15650,0.23,0.67
+
+#Medium Tanks Collie
+Spatha,3650,13550,0.33,0.67
+Falchion_MPT,3650,12725,0.33,0.67
+Talos,4000,13550,0.33,0.67
+Nemesis,3650,10500,0.33,0.67
+Ballista,3300,11500,0.30,0.75
+Scorpion_IST,3300,9800,0.30,0.75
+
+#Heavy Tanks Warden
+Silverhand_Chieftain,3100,13300,0.27,0.67
+Lordscar_STD,3100,10500,0.30,0.67
+Widow_HTD_Flamer,2200,17650,0.17,0.50
+
+#Medium Tanks Warden
+Outlaw_Brigand_Highwayman_,2950,11000,0.33,0.67
+Thornfall_Bonelaw,2650,10000,0.33,0.67
+
+#Light Tanks
+CollieLightTank_FlameTank,1950,9100,0.33,0.67
+LTD,1750,7250,0.35,0.67
+Kranesca,2250,9100,0.33,0.67
+WardenLightTank,1950,10000,0.30,0.67
+Ironhide,1950,14000,0.30,0.67
+
+#Scout Tanks
+KingSpire,1350,6000,0.5,0.9
+KingGallant,1350,7500,0.5,0.9
+
+
+

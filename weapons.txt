@@ -1,0 +1,20 @@
+#Shells with Pen Modifiers
+Ignifist,359,359,1.5
+AP/RPG,528,528,1.5
+ARC/RPG,647,647,2.5
+68mm,600,600,1.5
+75mm,1487,1487,1.5
+94.5mm,1750,1750,2.0
+
+#Rest of the penetrating shells
+30mm,340,340,1
+40mm,510,510,1
+RPG,445,445,1
+
+#Armour Damaging Autopen
+Sticky,407,407,10
+Varsi,412,412,10
+White_Ash,280,280,10
+20mm_High_Roll,33,33,10
+20mm_Average,28,28,10
+20mm_Low_Roll,23,23,10
