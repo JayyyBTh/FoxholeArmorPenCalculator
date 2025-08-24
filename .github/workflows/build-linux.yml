@@ -7,27 +7,26 @@ on:
 
 jobs:
   build-linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04   # <<< older baseline for better compat
     steps:
       - uses: actions/checkout@v4
 
-      # No Qt needed now
-      - name: Build calc_cli (pure STL)
+      - name: Build calc_cli (pure STL, portable)
         run: |
           g++ -std=c++17 -O2 \
+            -static-libstdc++ -static-libgcc \
             main_console.cpp calculator.cpp tanksnshells.cpp \
             -o calc_cli
           file calc_cli
-          ls -l calc_cli
+          ldd ./calc_cli || true
+          strip ./calc_cli
 
-      # Upload as artifact (backup in Actions UI)
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: calc_cli-linux
           path: calc_cli
 
-      # Create a new release every run and mark it latest
       - name: Create Release and upload binary
         uses: softprops/action-gh-release@v2
         with:
