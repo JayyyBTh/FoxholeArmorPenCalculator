@@ -1,6 +1,11 @@
 # FoxholeArmorPenCalculator
 
-Discord bot (`/calculate`) and C++ CLI that give the number of shots needed to kill a Foxhole vehicle and the kill chance after each shot.
+Discord bot and C++ CLI for Foxhole vehicle combat maths.
+
+- `/calculate` — shots needed to kill a vehicle and the kill chance after each shot (runs `calc_cli`).
+- `/progress` — reads a progress bar's fill percentage from a cropped screenshot (`barlen.py`; also usable standalone: `python barlen.py shot.png`).
+
+The bot reads its token from the `DISCORD_TOKEN` environment variable.
 
 ## CLI
 
