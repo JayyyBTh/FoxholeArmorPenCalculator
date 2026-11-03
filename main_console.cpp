@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <iomanip>
 
 #include "tanksnshells.h"
 #include "calculator.h"
@@ -10,7 +11,8 @@
 int main(int argc, char* argv[]) {
     if (argc != 7) {
         std::cerr << "Usage: " << argv[0]
-                  << " <tankName> <weaponName> <armorFrac> <rangeBonus> <angleBonus> <velocity>\n";
+                  << " <tankName> <weaponName> <armorFrac> <rangeMeters> <angleDeg> <velocity>\n"
+                  << "  angleDeg: 0 = shot square to the target's side (+40%), 90 = head-on (+0%)\n";
         return 1;
     }
 
@@ -19,10 +21,12 @@ int main(int argc, char* argv[]) {
 
     try {
         double armorFrac  = std::stod(argv[3]);
-        double rangeBonus = std::stod(argv[4]);
-        double angleBonus = std::stod(argv[5]);
+        double rangeM     = std::stod(argv[4]);
+        double angleDeg   = std::stod(argv[5]);
         double velocity   = std::stod(argv[6]);
-        double bonus = rangeBonus + angleBonus;
+        double rBonus = rangeBonus(rangeM);
+        double aBonus = angleBonus(angleDeg);
+        double bonus  = rBonus + aBonus;
 
         // Load data files from the working directory
         std::vector<Tank>   tanks   = loadTanks("tanks.txt");
@@ -50,6 +54,11 @@ int main(int argc, char* argv[]) {
     const Weapon& w = weaponMap[weaponName];
 
     std::ostringstream oss;
+    oss << std::fixed << std::setprecision(2)
+        << "Range " << rangeM << " m -> +" << rBonus * 100.0 << "%, "
+        << "hit angle " << angleDeg << " deg -> +" << aBonus * 100.0 << "%\n";
+    oss.unsetf(std::ios::floatfield);
+    oss << std::setprecision(6);
     killProbability(t, w, bonus, armorFrac, velocity, oss);
 
     std::cout << oss.str();

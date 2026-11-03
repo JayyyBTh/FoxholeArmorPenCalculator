@@ -28,11 +28,9 @@ weaps = read_names_from_csv("weapons.txt")
 armor_choices = [("0%", "0.0"), ("20%", "0.2"), ("40%", "0.4"),
                  ("50%", "0.5"), ("60%", "0.6"), ("75%", "0.75"), ("90%", "0.9"), ("100%", "1.0")]
 
-range_choices = [("5m (+25%)", "0.25"), ("10m (+20%)", "0.20"),
-                 ("20m (+10%)", "0.10"), ("30m+ (0%)", "0.0")]
-
-angle_choices = [("75° (+40%)", "0.40"), ("45° (+30%)", "0.30"),
-                 ("Front (0%)", "0.0")]
+# Range and angle are free numeric inputs; calc_cli turns them into bonuses:
+#   range bonus = 40 * max(0, 1 - (d + 5) / 40)^1.5 %   (+32.74% at 0 m, 0 from 35 m)
+#   angle bonus = 40 * cos(angle) %                    (0 deg = square to the side, 90 = head-on)
 
 velocity_choices = [("-20%", "0.8"), ("0%", "1.0"),
                     ("+10%x", "1.1"), ("+20%", "1.2"), ("+30%", "1.3"), ("+75%", "1.75")]
@@ -52,22 +50,23 @@ async def on_ready():
     tank="Tank name",
     weapon="Weapon name",
     armor="Armor fraction",
-    rbonus="Range bonus",
-    abonus="Angle bonus",
-    velocity="Velocity modifier"
+    range_m="Distance in metres (+32.7% at 0 m, falling to 0 at 35 m+)",
+    velocity="Velocity modifier",
+    angle="Hit angle in degrees: 0 = square to the side (+40%), 90 = head-on (default, +0%)",
 )
 @app_commands.choices(
     armor=[app_commands.Choice(name=n, value=v) for n, v in armor_choices],
-    rbonus=[app_commands.Choice(name=n, value=v) for n, v in range_choices],
-    abonus=[app_commands.Choice(name=n, value=v) for n, v in angle_choices],
     velocity=[app_commands.Choice(name=n, value=v) for n, v in velocity_choices],
 )
 async def calculate(interaction: discord.Interaction,
-    tank: str, weapon: str, armor: str, rbonus: str, abonus: str, velocity: str):
+    tank: str, weapon: str, armor: str,
+    range_m: app_commands.Range[float, 0.0, 200.0],
+    velocity: str,
+    angle: app_commands.Range[float, 0.0, 90.0] = 90.0):
 
     try:
         out = subprocess.check_output(
-            [EXE, tank, weapon, armor, rbonus, abonus, velocity],
+            [EXE, tank, weapon, armor, str(range_m), str(angle), velocity],
             text=True
         )
         if len(out) > 1900:  # Discord message limit ~2000

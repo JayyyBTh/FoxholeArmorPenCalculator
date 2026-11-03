@@ -2,6 +2,18 @@
 #include "calculator.h"
 #include <iomanip>
 #include <algorithm>
+#include <cmath>
+
+double rangeBonus(double rangeMeters) {
+    double x = std::max(0.0, 1.0 - (std::max(0.0, rangeMeters) + 5.0) / 40.0);
+    return 0.40 * std::pow(x, 1.5);
+}
+
+double angleBonus(double angleDeg) {
+    const double pi = 3.14159265358979323846;
+    double a = std::clamp(angleDeg, 0.0, 90.0);
+    return 0.40 * std::cos(a * pi / 180.0);
+}
 
 double computePenChance(const Tank& t, const Weapon& s, double armorFrac, double bonus) {
 
@@ -21,7 +33,8 @@ bool State::operator<(const State& o) const {
 void killProbability(const Tank& t, const Weapon& s, const double& bonus, const double& initialArmorFrac, const double& velocityMod, std::ostream& out) {
 
     out << "Calculating shots to kill full health and " << initialArmorFrac*100 << "% armor " << t.name << " with " 
-        << (100*velocityMod)-100 << "% velocity modifier " << s.name << ". Angle and range bonuses sum up to " << bonus <<" percentile points" << std::endl;
+        << (100*velocityMod)-100 << "% velocity modifier " << s.name << ". Angle and range bonuses sum up to "
+        << std::fixed << std::setprecision(2) << bonus * 100.0 << " percentage points" << std::endl;
     
     using Dist = std::map<State, double>;
 
