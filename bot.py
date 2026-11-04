@@ -1,4 +1,5 @@
 import os
+import logging
 import csv
 import subprocess
 import discord
@@ -14,6 +15,11 @@ TOKEN = os.environ.get("DISCORD_TOKEN", "YOUR_REAL_BOT_TOKEN")  # set DISCORD_TO
 EXE = "./calc_cli"                 # Linux binary in same folder
 # ====================
 
+# Use logging, not print: if the console the bot was started from closes,
+# print() raises and breaks whatever handler called it (autocomplete
+# showed "Loading options failed"). logging drops output it can't write.
+log = logging.getLogger("bot")
+
 # --- load names from CSV-like files (first column = name) ---
 def read_names_from_csv(path: str):
     names = []
@@ -26,7 +32,7 @@ def read_names_from_csv(path: str):
 
 tanks = read_names_from_csv("tanks.txt")
 weaps = read_names_from_csv("weapons.txt")
-print(f"Loaded {len(tanks)} tanks, {len(weaps)} weapons")
+log.warning(f"Loaded {len(tanks)} tanks, {len(weaps)} weapons")
 
 # Fixed choices (schema-level; these DO require re-sync)
 armor_choices = [("0%", "0.0"), ("20%", "0.2"), ("40%", "0.4"),
@@ -85,14 +91,12 @@ async def calculate(
 # --------- AUTOCOMPLETE (runtime; should fire while typing) ---------
 @calculate.autocomplete("tank")
 async def tank_autocomplete(interaction: discord.Interaction, current: str):
-    print("tank_autocomplete called with:", repr(current))
     pool = tanks or []
     subset = pool if not current else [n for n in pool if current.lower() in n.lower()]
     return [app_commands.Choice(name=n, value=n) for n in subset[:25]]
 
 @calculate.autocomplete("weapon")
 async def weapon_autocomplete(interaction: discord.Interaction, current: str):
-    print("weapon_autocomplete called with:", repr(current))
     pool = weaps or []
     subset = pool if not current else [n for n in pool if current.lower() in n.lower()]
     return [app_commands.Choice(name=n, value=n) for n in subset[:25]]
@@ -100,17 +104,17 @@ async def weapon_autocomplete(interaction: discord.Interaction, current: str):
 # -------------------- SYNC (guild-only, fresh) --------------------
 @bot.event
 async def on_ready():
-    print(f"✅ Logged in as {bot.user}")
+    log.warning(f"Logged in as {bot.user}")
     guild = discord.Object(id=DEV_GUILD_ID)
     try:
         bot.tree.clear_commands(guild=guild)
         await bot.tree.sync(guild=guild)
-        print("🧹 Guild commands removed")
+        log.warning("Guild commands removed")
         # Push the current command schema (new range_m / angle options) globally.
         synced = await bot.tree.sync()
-        print(f"🌍 Synced {len(synced)} global commands")
+        log.warning(f"Synced {len(synced)} global commands")
     except Exception as e:
-        print("Sync error:", e)
+        log.exception("Sync error: %s", e)
 MAX_IMAGE_BYTES = 8 * 1024 * 1024
  
  
